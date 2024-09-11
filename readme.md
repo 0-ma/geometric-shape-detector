@@ -32,10 +32,10 @@ python generate_geometric_shapes_dataset.py [OPTIONS]
 
 ### Options
 
-- `--output_dir`: Output directory for the dataset (default: "./out/dataset/")
-- `--nb_samples`: Total number of samples to generate (default: 3000)
-- `--push_to_hub`: Flag to push the dataset to Hugging Face Hub (optional)
-- `--hub_name`: Hugging Face Hub repository name (default: "0-ma/geometric-shapes")
+- `--output_dir`: Output directory for the dataset
+- `--nb_samples`: Total number of samples to generate (default: 21000)
+- `--output_hub_model_name`: Hugging Face Hub repository name to push the dataset to Hugging Face Hub (optional)
+- `--output_hub_token`: Hugging Face Hub token to push the dataset to Hugging Face Hub (optional)
 
 ### Examples
 

@@ -86,9 +86,10 @@ def main():
     parser = argparse.ArgumentParser(description="Generate a dataset of geometric shapes.")
     parser.add_argument("--output_dir", default="./out/dataset", help="Output directory for the dataset")
     parser.add_argument("--nb_samples", type=int, default=21000, help="Total number of samples to generate")
-    parser.add_argument("--push_to_hub", action="store_true", help="Push the dataset to Hugging Face Hub")
-    parser.add_argument("--hub_name", default="0-ma/geometric-shapes", help="Hugging Face Hub repository name")
-    parser.add_argument("--hub_token", default="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", help="Hugging Face Hub token")
+    parser.add_argument("--output_hub_model_name", type=str, default="0-ma/geometric-shapes",
+                        help="Output model name for HuggingFace Hub (optional)")
+    parser.add_argument("--output_hub_token", type=str, 
+                        help="HuggingFace Hub token (optional)")
 
     args = parser.parse_args()
 #
@@ -113,8 +114,11 @@ def main():
     # Optionally push the dataset to Hugging Face Hub
     if args.push_to_hub:
         dataset = load_dataset("imagefolder", data_dir=args.output_dir)
-        dataset.push_to_hub(args.hub_name, token = args.hub_token )
-        print(f"Dataset pushed to Hugging Face Hub: {args.hub_name}")
+        if args.output_hub_model_name and args.output_hub_token:
+            dataset.push_to_hub(args.output_hub_model_name, token=args.output_hub_token)
+            print(f"Dataset pushed to Hugging Face Hub: {args.hub_name}")
+        elif args.output_hub_model_name or args.output_hub_token:
+            print("Warning: Both output_hub_model_name and output_hub_token must be provided to push to Hub.")        
     else:
         print(f"Dataset generated in: {args.output_dir}")
 
