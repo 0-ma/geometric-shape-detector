@@ -11,7 +11,8 @@ from transformers import (
     AutoModelForImageClassification,
     Trainer,
     TrainingArguments,
-    DefaultDataCollator,
+    DefaultDataCollator
+    
 )
 
 def parse_arguments() -> argparse.Namespace:
@@ -81,6 +82,8 @@ def main():
         ignore_mismatched_sizes=True
     )
     os.makedirs(args.output_dir, exist_ok=True)
+    
+
 
     # Set up training arguments
     training_args = TrainingArguments(
@@ -102,8 +105,8 @@ def main():
 
     # Prepare dataset transforms
     transforms = create_transforms(image_processor)
-    dataset["train"].set_transform(lambda examples: transform_examples(examples, transforms))
-    dataset["test"].set_transform(lambda examples: transform_examples(examples, transforms))
+    for dataset_part in dataset.values():
+        dataset_part.set_transform(lambda examples: transform_examples(examples, transforms))
 
     # Initialize trainer
     trainer = Trainer(
@@ -111,14 +114,20 @@ def main():
         args=training_args,
         data_collator=DefaultDataCollator(),
         train_dataset=dataset["train"],
-        eval_dataset=dataset["test"],
+        eval_dataset=dataset["validation"],
         tokenizer=image_processor,
         compute_metrics=compute_metrics,
     )
 
-    # Train the model
+    Train the model
     trainer.train()
-
+    
+    model.save_pretrained(os.path.join(args.output_dir ,"final_model"), from_pt=True)    
+    
+    test_metrics = trainer.evaluate(dataset["test"], metric_key_prefix="test")
+    
+    print(f"Test Metrics : {test_metrics}")
+    
     # Push the model to HuggingFace Hub if output_hub_model_name and output_hub_token are provided
     if args.output_hub_model_name and args.output_hub_token:
         model.push_to_hub(args.output_hub_model_name, token=args.output_hub_token)
