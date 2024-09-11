@@ -119,7 +119,7 @@ def main():
         compute_metrics=compute_metrics,
     )
 
-    Train the model
+    #Train the model
     trainer.train()
     
     model.save_pretrained(os.path.join(args.output_dir ,"final_model"), from_pt=True)    
