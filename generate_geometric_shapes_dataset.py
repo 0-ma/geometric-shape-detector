@@ -10,6 +10,19 @@ import numpy as np
 from datasets import load_dataset
 
 
+
+def parse_arguments() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Generate a dataset of geometric shapes.")
+    parser.add_argument("--output_dir", default="./out/dataset", help="Output directory for the dataset")
+    parser.add_argument("--nb_samples", type=int, default=21000, help="Total number of samples to generate")
+    parser.add_argument("--output_hub_model_name", type=str, default="0-ma/geometric-shapes",
+                        help="Output model name for HuggingFace Hub (optional)")
+    parser.add_argument("--output_hub_token", type=str, 
+                        help="HuggingFace Hub token (optional)")
+    return parser.parse_args()
+
+
 def generate_polygon_image(img_dim: int = 50, nb_faces: int = 100) -> np.ndarray:
     """
     Generate an image of a polygon with random properties.
@@ -83,15 +96,7 @@ def generate_dataset(output_dir: str, nb_samples: int, shape_types: Dict[str, in
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a dataset of geometric shapes.")
-    parser.add_argument("--output_dir", default="./out/dataset", help="Output directory for the dataset")
-    parser.add_argument("--nb_samples", type=int, default=21000, help="Total number of samples to generate")
-    parser.add_argument("--output_hub_model_name", type=str, default="0-ma/geometric-shapes",
-                        help="Output model name for HuggingFace Hub (optional)")
-    parser.add_argument("--output_hub_token", type=str, 
-                        help="HuggingFace Hub token (optional)")
-
-    args = parser.parse_args()
+    args = parse_arguments()
 #
     # Define shape types
     shape_types: Dict[str, int] = {
