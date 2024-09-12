@@ -1,10 +1,10 @@
 import numpy as np
 from PIL import Image
 from transformers import AutoImageProcessor, AutoModelForImageClassification 
-
+import requests
 def main():
     labels =  [
-        "Only text",
+        "None",
         "Circle",
         "Triangle",
         "Square",
@@ -12,8 +12,12 @@ def main():
         "Hexagon"
     ] 
         
-    images = [Image.open("input/exemple_circle.jpg"), 
-              Image.open("input/exemple_pentagone.jpg")]
+    #Local file equivalent
+    # images = [Image.open("input/exemple_circle.jpg"), 
+    #           Image.open("input/exemple_pentagone.jpg")]
+    
+    images = [Image.open(requests.get("https://raw.githubusercontent.com/0-ma/geometric-shape-detector/main/input/exemple_circle.jpg", stream=True).raw), 
+            Image.open(requests.get("https://raw.githubusercontent.com/0-ma/geometric-shape-detector/main/input/exemple_pentagone.jpg", stream=True).raw)]
     feature_extractor = AutoImageProcessor.from_pretrained('0-ma/vit-geometric-shapes-tiny')
     model = AutoModelForImageClassification.from_pretrained('0-ma/vit-geometric-shapes-tiny')
     inputs = feature_extractor(images=images, return_tensors="pt")

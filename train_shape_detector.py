@@ -1,7 +1,7 @@
 import argparse
 import os
 from typing import Dict, List, Tuple, Optional
-
+import shutil
 import evaluate
 import numpy as np
 from datasets import load_dataset
@@ -108,6 +108,14 @@ def main():
     for dataset_part in dataset.values():
         dataset_part.set_transform(lambda examples: transform_examples(examples, transforms))
 
+
+    model_out_dir = os.path.join(args.output_dir ,"final_model")
+
+
+    if os.path.isdir(model_out_dir):
+        shutil.rmtree(model_out_dir) 
+        
+        
     # Initialize trainer
     trainer = Trainer(
         model=model,
@@ -121,12 +129,12 @@ def main():
 
     #Train the model
     trainer.train()
-    
-    model.save_pretrained(os.path.join(args.output_dir ,"final_model"), from_pt=True)    
-    
+        
     test_metrics = trainer.evaluate(dataset["test"], metric_key_prefix="test")
     
-    print(f"Test Metrics : {test_metrics}")
+    print(f"Test Metrics : {test_metrics}")  
+
+    model.save_pretrained(model_out_dir, from_pt=True)  
     
     # Push the model to HuggingFace Hub if output_hub_model_name and output_hub_token are provided
     if args.output_hub_model_name and args.output_hub_token:
