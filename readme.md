@@ -3,6 +3,7 @@
 This project generates a dataset of geometric shapes images and provides a training script for shape classification. It includes polygons with varying numbers of sides and random text, suitable for machine learning tasks such as shape classification or image recognition.
 It has been used in order to create this HuggingFace dataset:
 - https://huggingface.co/datasets/0-ma/geometric-shapes
+
 And and these HuggingFace models:
 - https://huggingface.co/0-ma/vit-geometric-shapes-base
 - https://huggingface.co/0-ma/vit-geometric-shapes-tiny
